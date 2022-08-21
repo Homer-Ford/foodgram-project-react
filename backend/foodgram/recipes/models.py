@@ -1,10 +1,12 @@
-from colorfield.fields import ColorField
-from django.contrib.auth import get_user_model
 from django.db import models
+from colorfield.fields import ColorField
+
 from users.models import User
 
 
 class Ingredients(models.Model):
+    """Модель для создания таблицы ингредиентов."""
+
     name = models.CharField(max_length=200, null=False)
     measurement_unit = models.TextField(null=False)
 
@@ -12,10 +14,11 @@ class Ingredients(models.Model):
         verbose_name_plural = 'Ingredients'
 
     def __str__(self):
-        return self.name.capitalize()
+        return f'{self.name.capitalize()} ({self.measurement_unit})'
+
 
 class Recipes(models.Model):
-    """Модель для создания таблицы Recipes."""
+    """Модель для создания таблицы рецептов."""
 
     author = models.ForeignKey(
         User,
@@ -27,7 +30,7 @@ class Recipes(models.Model):
     image = models.ImageField(
         'Картинка',
         help_text='Загрузите картинку рецепта',
-        upload_to='recipes/image/',
+        upload_to='recipes/',
         blank=True,
         null=True,
     )
@@ -52,6 +55,11 @@ class Recipes(models.Model):
     is_favorited = models.BooleanField(default=False)
     is_in_shopping_cart = models.BooleanField(default=False)
 
+    def _get_favorite_count(self):
+        return self.favourit.count()
+
+    favorite_count = property(_get_favorite_count)
+
     class Meta:
         ordering = ['-pub_date']
         verbose_name_plural = 'Recipes'
@@ -60,13 +68,11 @@ class Recipes(models.Model):
         return f"{self.name}, {self.author}"
 
 
-
-
 class Tags(models.Model):
-    """Модель для создания таблицы Teg."""
+    """Модель для создания таблицы тегов."""
 
     name = models.CharField(max_length=200, unique=True)
-    color = ColorField(format="hex", unique=True)
+    color = ColorField(format='hex', unique=True)
     slug = models.SlugField(unique=True)
 
     class Meta:
@@ -78,7 +84,9 @@ class Tags(models.Model):
     def __str__(self):
         return self.name
 
+
 class RecipesIngredients(models.Model):
+    """Модель для создания таблицы связи рецепт-ингредиенты."""
 
     recipes = models.ForeignKey(
         Recipes,
@@ -90,11 +98,13 @@ class RecipesIngredients(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ингредиент',
     )
-
     amount = models.IntegerField(default=1)
 
+    class Meta:
+        verbose_name_plural = 'RecipesIngredients'
+
 class Favourites(models.Model):
-    """Модель для создания таблицы Отзывы."""
+    """Модель для создания таблицы избранных."""
 
     recipes = models.ForeignKey(
         Recipes,
@@ -114,16 +124,15 @@ class Favourites(models.Model):
     )
 
     class Meta:
+        verbose_name_plural = 'Favourites'
         constraints = [models.UniqueConstraint(
             fields=['recipes', 'user'],
             name='favourite_unique')
         ]
 
 
-
-
 class ShoppingCart(models.Model):
-    """Модель для создания таблицы Отзывы."""
+    """Модель для создания таблицы покупок."""
 
     recipes = models.ForeignKey(
         Recipes,
@@ -143,13 +152,15 @@ class ShoppingCart(models.Model):
     )
 
     class Meta:
+        verbose_name_plural = 'ShoppingCart'
         constraints = [models.UniqueConstraint(
             fields=['recipes', 'user'],
             name='shopping_unique')
         ]
 
+
 class Follow(models.Model):
-    """Модель для создания таблицы Follow."""
+    """Модель для создания таблицы подписок."""
 
     user = models.ForeignKey(
         User,
@@ -165,6 +176,7 @@ class Follow(models.Model):
     )
 
     class Meta:
+        verbose_name_plural = 'Follow'
         constraints = [
             models.UniqueConstraint(fields=['user', 'following'],
                                     name='follow_unique')]

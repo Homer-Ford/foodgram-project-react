@@ -3,6 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
+    """Модель для создания таблицы пользователей."""
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
@@ -12,6 +13,8 @@ class User(AbstractUser):
     ]
     email = models.EmailField(unique=True)
 
+    class Meta:
+        verbose_name_plural = 'User'
 
     def __str__(self):
         return self.username
