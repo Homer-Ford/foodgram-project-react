@@ -1,7 +1,7 @@
 from rest_framework import pagination
 
 
-class RecipesResultsSetPagination(pagination.PageNumberPagination):
+class RecipeResultSetPagination(pagination.PageNumberPagination):
     """Пагинатор для списка рецептов."""
 
     page_query_param = 'page'

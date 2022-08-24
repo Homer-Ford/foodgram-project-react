@@ -1,11 +1,16 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
+from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
-from .models import User
-from recipes.models import (Recipes, Ingredients, Tags, RecipesIngredients,
-                            Favourites, Follow, ShoppingCart)
+from recipes.models import (
+    Recipe, Ingredient, Tag, RecipeIngredient,
+    Favorite, Follow, ShoppingCart,
+)
+
+
+User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
@@ -27,7 +32,7 @@ class CustomUserSerializer(UserSerializer):
         return queryset
 
 
-class UserSignSerializer(UserCreateSerializer):
+class UserSignInSerializer(UserCreateSerializer):
     """Сериализатор для регистрации пользователей."""
 
     class Meta:
@@ -51,30 +56,36 @@ class FollowSerializer(serializers.ModelSerializer):
         slug_field='username',
         required=False
     )
-    following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
-                                                   required=False)
+    following = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        required=False
+    )
 
     def validate(self, data):
-        user = self.context.get('request').user
+        user = data.get('user')
         following = data.get('following')
         if user == following:
             raise serializers.ValidationError(
-                "Нельзя подписаться на самого себя.")
+                'Нельзя подписаться на самого себя.')
         if Follow.objects.filter(user=user, following=following).exists():
-            raise serializers.ValidationError("Вы уже подписаны.")
+            raise serializers.ValidationError('Вы уже подписаны.')
         return data
 
     class Meta:
         model = Follow
         fields = ('user', 'following')
 
+    def to_representation(self, instance):
+        serializer = SubUserSerializer(instance.following)
+        return serializer.data
 
-class RecipesMiniSerializer(serializers.ModelSerializer):
+
+class RecipeMiniSerializer(serializers.ModelSerializer):
     """Сериализатор для краткой информации о рецепте."""
 
     class Meta:
         fields = ('id', 'name', 'image', 'cooking_time')
-        model = Recipes
+        model = Recipe
 
 
 class SubUserSerializer(UserSerializer):
@@ -93,58 +104,10 @@ class SubUserSerializer(UserSerializer):
         return True
 
     def get_recipes(self, obj):
-        queryset = Recipes.objects.filter(author=obj.id)
-        serializer = RecipesMiniSerializer(queryset, many=True)
+        queryset = Recipe.objects.filter(author=obj.id)
+        serializer = RecipeMiniSerializer(queryset, many=True)
         return serializer.data
 
     def get_recipes_count(self, obj):
-        queryset = Recipes.objects.filter(author=obj.id).count()
+        queryset = Recipe.objects.filter(author=obj.id).count()
         return queryset
-
-
-class FavoriteSerializer(serializers.ModelSerializer):
-    """Сериализатор для получения информации об избранных."""
-
-    recipes = serializers.PrimaryKeyRelatedField(
-        queryset=Recipes.objects.all(), required=False)
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(), required=False)
-
-    class Meta:
-        model = Favourites
-        fields = ('recipes', 'user')
-
-
-class SubsribtionsSerializer(UserSerializer):
-    """Сериализатор для получения информации о пользователях."""
-
-    following = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(),
-                                                   required=False)
-    recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Follow
-        fields = ('following', 'recipes', 'recipes_count')
-
-    def get_recipes(self, obj):
-        queryset = Recipes.objects.filter(author=obj.following.id)
-        serializer = RecipesMiniSerializer(queryset, many=True)
-        return serializer.data
-
-    def get_recipes_count(self, obj):
-        queryset = Recipes.objects.filter(author=obj.following.id).count()
-        return queryset
-
-
-class SubSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели подписок."""
-
-    class Meta:
-        model = Follow
-        fields = ('following',)
-
-    def to_representation(self, instance):
-        user = User.objects.filter(username=instance.following)
-        serializer = SubUserSerializer(user, many=True)
-        return serializer.data[0]

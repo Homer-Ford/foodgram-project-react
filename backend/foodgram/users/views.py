@@ -5,11 +5,16 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
+from django.contrib.auth import get_user_model
 
-from recipes.models import Favourites, Follow, Recipes
-from users.models import User
-from .serializers import (CustomUserSerializer, UserSignSerializer,
-                          FavoriteSerializer, FollowSerializer, SubSerializer)
+from recipes.models import Favorite, Follow, Recipe
+from .serializers import (
+    CustomUserSerializer, UserSignInSerializer,
+    FollowSerializer,
+)
+
+
+User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
@@ -18,8 +23,7 @@ class CustomUserViewSet(UserViewSet):
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return CustomUserSerializer
-        else:
-            return UserSignSerializer
+        return UserSignInSerializer
 
     @action(methods=['get'],
             detail=False,
@@ -37,47 +41,6 @@ class CustomUserViewSet(UserViewSet):
     pagination_class = LimitOffsetPagination
 
 
-class UserFollowViewSet(viewsets.ViewSet):
-    """Управление подписками."""
-
-    queryset = Follow.objects.all()
-    serializer_class = FollowSerializer
-
-    @action(methods=['delete'], detail=False)
-    def delete(self, request, **kwargs):
-        user = request.user
-        author_id = self.kwargs.get('id')
-        author = get_object_or_404(User, pk=author_id)
-        follow = get_object_or_404(Follow, user=user, author=author)
-        follow.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class FavoriteViewSet(viewsets.ModelViewSet):
-    """Вьюсет для списка Избранных."""
-
-    queryset = Favourites.objects.all()
-    serializer_class = FavoriteSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def perform_create(self, serializer):
-        recipes_id = self.kwargs.get('recipes_id')
-        recipes = get_object_or_404(Recipes, pk=recipes_id)
-        author = self.request.user
-        if Favourites.objects.filter(user=author, recipes=recipes).exists():
-            raise serializers.ValidationError("Вы уже добавили в избранное.")
-        serializer.save(user=author, recipes=recipes)
-
-    @action(methods=['delete'], detail=False)
-    def delete(self, request, **kwargs):
-        recipes_id = self.kwargs.get('recipes_id')
-        recipes = get_object_or_404(Recipes, pk=recipes_id)
-        author = self.request.user
-        favorite = get_object_or_404(Favourites, user=author, recipes=recipes)
-        favorite.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 class FollowViewSet(viewsets.ModelViewSet):
     """Вьюсет для списка подписок."""
 
@@ -88,8 +51,7 @@ class FollowViewSet(viewsets.ModelViewSet):
         author_id = self.kwargs.get('users_id')
         author = get_object_or_404(User, pk=author_id)
         user = self.request.user
-        if Follow.objects.filter(following=author, user=user).exists():
-            raise serializers.ValidationError('Вы уже подписались.')
+        serializer.is_valid(raise_exception=True)
         serializer.save(following=author, user=user)
 
     @action(methods=['delete'], detail=False)
@@ -101,15 +63,21 @@ class FollowViewSet(viewsets.ModelViewSet):
         follow.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @action(detail=False, permission_classes=(IsAuthenticated,),
+            url_path='subscribe', methods=['delete', 'post'])
+    def subscribe(self, request, **kwargs):
+        if request.method == 'DELETE':
+            following = self.kwargs.get('users_id')
+            user = self.request.user
+            follow = get_object_or_404(Follow, user=user, following=following)
+            follow.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-class SubscriptionUserViewSet(viewsets.ModelViewSet):
-    """Вьюсет для пользователей."""
-
-    permission_classes = (IsAuthenticated,)
-    pagination_class = LimitOffsetPagination
-    serializer_class = SubSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        following = user.follower.all()
-        return following
+        following_id = self.kwargs.get('users_id')
+        following = get_object_or_404(User, pk=following_id)
+        user = request.user
+        serializer = FollowSerializer(
+            data={'user': user, 'following': following.id})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
