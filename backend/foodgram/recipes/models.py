@@ -123,6 +123,7 @@ class RecipeIngredient(models.Model):
     amount = models.PositiveIntegerField(
         default=1,
         validators=(validate_no_zero,),
+        verbose_name='Количество',
     )
 
     class Meta:
@@ -140,13 +141,13 @@ class Favorite(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт',
-        related_name='favorit'
+        related_name='favorite'
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
-        related_name='favorit'
+        related_name='favorite'
     )
 
     pub_date = models.DateTimeField(

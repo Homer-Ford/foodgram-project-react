@@ -4,6 +4,7 @@ from rest_framework.relations import SlugRelatedField
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
+from api.serializers import RecipeMiniSerializer
 from recipes.models import (
     Recipe, Ingredient, Tag, RecipeIngredient,
     Favorite, Follow, ShoppingCart,
@@ -78,14 +79,6 @@ class FollowSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         serializer = SubUserSerializer(instance.following)
         return serializer.data
-
-
-class RecipeMiniSerializer(serializers.ModelSerializer):
-    """Сериализатор для краткой информации о рецепте."""
-
-    class Meta:
-        fields = ('id', 'name', 'image', 'cooking_time')
-        model = Recipe
 
 
 class SubUserSerializer(UserSerializer):

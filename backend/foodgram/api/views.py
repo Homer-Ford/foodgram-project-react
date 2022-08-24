@@ -70,7 +70,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             recipes__shop__user=user
         ).values('ingredients_id').annotate(Sum('amount'))
         for ingredient in ingredients:
-            name = Ingredient.objects.get(pk=ingredient['ingredients_id'])
+            name = ingredient.name
             amount = ingredient['amount__sum']
             responce.writelines(f'{name} - {amount} \n')
         return responce

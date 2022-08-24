@@ -9,8 +9,10 @@ from .models import (
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
 
+    @property
     def favorite_count(self, obj):
         return obj.favorit.count()
+    favorite_count.fget.shot_discription = u'Добавлено в избранное:'
 
     list_display = ('name', 'author')
     readonly_fields = ('favorite_count',)
