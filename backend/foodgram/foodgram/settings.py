@@ -10,7 +10,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'web']
+ALLOWED_HOSTS = ['158.160.0.12', 'localhost', '127.0.0.1', 'web']
 
 INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
