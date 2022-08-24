@@ -1,36 +1,36 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from users.views import FavoriteViewSet
-from .views import (TagsViewSet, RecipesViewSet, IngredientsViewSet,
-                    ShoppingViewSet)
+from .views import (
+    TagViewSet, RecipeViewSet, IngredientViewSet,
+)
 
 
 router = DefaultRouter()
 
 router.register(
     'tags',
-    TagsViewSet,
+    TagViewSet,
     basename='tags'
 )
 router.register(
-    r'recipes/(?P<recipes_id>\d+)/favorite',
-    FavoriteViewSet,
+    r'recipes/(?P<recipes_id>\d+)',
+    RecipeViewSet,
     basename='favorite'
 )
 router.register(
-    r'recipes/(?P<recipes_id>\d+)/shopping_cart',
-    ShoppingViewSet,
+    r'recipes/(?P<recipes_id>\d+)',
+    RecipeViewSet,
     basename='shopping_cart'
 )
 router.register(
     'recipes',
-    RecipesViewSet,
+    RecipeViewSet,
     basename='recipes'
 )
 router.register(
     'ingredients',
-    IngredientsViewSet,
+    IngredientViewSet,
     basename='ingredients'
 )
 

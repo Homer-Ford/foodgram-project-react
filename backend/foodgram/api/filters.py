@@ -1,10 +1,10 @@
 from django_filters.rest_framework import FilterSet, filters
 from rest_framework.filters import SearchFilter
 
-from recipes.models import Recipes
+from recipes.models import Recipe
 
 
-class RecipesFilter(FilterSet):
+class RecipeFilter(FilterSet):
     """Фильтрация рецептов."""
 
     tags = filters.CharFilter(
@@ -23,12 +23,12 @@ class RecipesFilter(FilterSet):
     )
 
     class Meta:
-        model = Recipes
+        model = Recipe
         fields = ['tags', 'author']
 
     def get_is_favorited(self, queryset, name, value):
         if value and not self.request.user.is_anonymous:
-            return queryset.filter(favourit__user=self.request.user)
+            return queryset.filter(favorit__user=self.request.user)
         return queryset
 
     def get_is_in_shopping_cart(self, queryset, name, value):
@@ -40,4 +40,4 @@ class RecipesFilter(FilterSet):
 class CustomSearchFilter(SearchFilter):
     """Поиск игредиентов."""
 
-    search_param = "name"
+    search_param = 'name'

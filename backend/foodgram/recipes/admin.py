@@ -1,34 +1,46 @@
 from django.contrib import admin
 
-from .models import (Recipes, Ingredients, Tags, RecipesIngredients,
-                     Favourites, Follow, ShoppingCart)
+from .models import (
+    Recipe, Ingredient, Tag, RecipeIngredient,
+    Favorite, Follow, ShoppingCart,
+)
 
 
-@admin.register(Recipes)
-class RecipesAdmin(admin.ModelAdmin):
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+
+    def favorite_count(self, obj):
+        return obj.favorit.count()
+
     list_display = ('name', 'author')
     readonly_fields = ('favorite_count',)
     list_filter = ('author', 'name', 'tags',)
 
-@admin.register(Ingredients)
-class IngredientsAdmin(admin.ModelAdmin):
+
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
     list_filter = ('name',)
 
-@admin.register(Tags)
-class TagsAdmin(admin.ModelAdmin):
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(RecipesIngredients)
-class RecipesIngredientsAdmin(admin.ModelAdmin):
+
+@admin.register(RecipeIngredient)
+class RecipeIngredientAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Favourites)
-class FavoritesAdmin(admin.ModelAdmin):
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
