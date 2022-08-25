@@ -4,7 +4,7 @@ from rest_framework.relations import SlugRelatedField
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
-from api.serializers import RecipeMiniSerializer
+import api.serializers as api
 from recipes.models import (
     Recipe, Ingredient, Tag, RecipeIngredient,
     Favorite, Follow, ShoppingCart,
@@ -98,7 +98,7 @@ class SubUserSerializer(UserSerializer):
 
     def get_recipes(self, obj):
         queryset = Recipe.objects.filter(author=obj.id)
-        serializer = RecipeMiniSerializer(queryset, many=True)
+        serializer = api.RecipeMiniSerializer(queryset, many=True)
         return serializer.data
 
     def get_recipes_count(self, obj):

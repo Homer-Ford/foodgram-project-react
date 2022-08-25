@@ -68,11 +68,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
         user = request.user
         ingredients = RecipeIngredient.objects.filter(
             recipes__shop__user=user
-        ).values('ingredients_id').annotate(Sum('amount'))
+        ).values(
+            'ingredients_id__name',
+            'ingredients_id__measurement_unit'
+        ).annotate(Sum('amount'))
         for ingredient in ingredients:
-            name = ingredient.name
+            name = ingredient['ingredients_id__name'].capitalize()
+            measurement_unit = ingredient['ingredients_id__measurement_unit']
             amount = ingredient['amount__sum']
-            responce.writelines(f'{name} - {amount} \n')
+            responce.writelines(f'{name} ({measurement_unit}) - {amount} \n')
         return responce
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
