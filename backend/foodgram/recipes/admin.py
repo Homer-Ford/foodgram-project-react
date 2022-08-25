@@ -11,7 +11,8 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def favorite_count(self, obj):
         return obj.favorite.count()
-    favorite_count.short_description = "Добавлено в избранное"
+
+    favorite_count.short_description = 'Добавлено в избранное'
 
     list_display = ('name', 'author')
     readonly_fields = ('favorite_count',)
