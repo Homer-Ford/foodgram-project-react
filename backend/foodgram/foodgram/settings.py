@@ -13,7 +13,12 @@ SECRET_KEY = '#q#rng0dwd=)z!lk)t=q+=wonxv&y(!4$u^t-gca^$zah$%&7$'
 
 DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = ['158.160.0.12', 'localhost', '127.0.0.1', 'web']
+ALLOWED_HOSTS = ['158.160.0.12',
+                 'localhost',
+                 '127.0.0.1',
+                 'web',
+                 'dyn.epicgifs.net',
+]
 
 INSTALLED_APPS = [
     'recipes.apps.RecipesConfig',
