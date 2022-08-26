@@ -67,8 +67,8 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
         'NAME': os.getenv('DB_NAME'),
-        'USER': 'postgres',
-        'PASSWORD': '03041987Dog',
+        'POSTGRES_USER': os.getenv('POSTGRES_USER'),
+        'POSTGRES_PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT')
     }
@@ -105,7 +105,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/media'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

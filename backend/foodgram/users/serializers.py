@@ -1,17 +1,14 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
-from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer, UserCreateSerializer
 
 import api.serializers as api
+from .models import User
 from recipes.models import (
     Recipe, Ingredient, Tag, RecipeIngredient,
     Favorite, Follow, ShoppingCart,
 )
-
-
-User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):

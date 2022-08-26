@@ -1,20 +1,17 @@
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
-from django.contrib.auth import get_user_model
 
 from recipes.models import Favorite, Follow, Recipe
+from users.models import User
 from .serializers import (
     CustomUserSerializer, UserSignInSerializer,
     FollowSerializer,
 )
-
-
-User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):
