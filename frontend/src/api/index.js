@@ -52,7 +52,7 @@ class Api {
         method: 'POST',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Аuthorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -79,7 +79,7 @@ class Api {
         method: 'GET',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Аuthorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -93,7 +93,7 @@ class Api {
         method: 'POST',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Аuthorization': `Token ${token}`
         },
         body: JSON.stringify({ current_password, new_password })
       }
@@ -112,7 +112,7 @@ class Api {
     tags
   } = {}) {
       const token = localStorage.getItem('token')
-      const authorization = token ? { 'authorization': `Token ${token}` } : {}
+      const authorization = token ? { 'Аuthorization': `Token ${token}` } : {}
       const tagsString = tags ? tags.filter(tag => tag.value).map(tag => `&tags=${tag.slug}`).join('') : ''
       return fetch(
         `/api/recipes/?page=${page}&limit=${limit}${author ? `&author=${author}` : ''}${is_favorited ? `&is_favorited=${is_favorited}` : ''}${is_in_shopping_cart ? `&is_in_shopping_cart=${is_in_shopping_cart}` : ''}${tagsString}`,
@@ -130,7 +130,7 @@ class Api {
     recipe_id
   }) {
     const token = localStorage.getItem('token')
-    const authorization = token ? { 'authorization': `Token ${token}` } : {}
+    const authorization = token ? { 'Authorization': `Token ${token}` } : {}
     return fetch(
       `/api/recipes/${recipe_id}/`,
       {
@@ -158,7 +158,7 @@ class Api {
         method: 'POST',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         },
         body: JSON.stringify({
           name,
@@ -188,7 +188,7 @@ class Api {
         method: 'PATCH',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         },
         body: JSON.stringify({
           name,
@@ -211,7 +211,7 @@ class Api {
         method: 'POST',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -225,7 +225,7 @@ class Api {
         method: 'DELETE',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -239,7 +239,7 @@ class Api {
         method: 'GET',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -256,7 +256,7 @@ class Api {
         method: 'GET',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
@@ -276,7 +276,7 @@ class Api {
         method: 'GET',
         headers: {
           ...this._headers,
-          'authorization': `Token ${token}`
+          'Authorization': `Token ${token}`
         }
       }
     ).then(this.checkResponse)
