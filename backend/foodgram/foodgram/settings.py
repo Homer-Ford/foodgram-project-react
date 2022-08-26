@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
     'django.contrib.admin',
-    'django.contrib.auth',
+    #'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -110,7 +110,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = '/media'
+MEDIA_ROOT = os.path.join('media')
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
