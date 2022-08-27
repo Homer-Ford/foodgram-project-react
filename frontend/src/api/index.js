@@ -45,7 +45,7 @@ class Api {
   }
 
   signout () {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       '/api/auth/token/logout/',
       {
@@ -72,7 +72,7 @@ class Api {
   }
 
   getUserData () {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/me/`,
       {
@@ -86,7 +86,7 @@ class Api {
   }
 
   changePassword ({ current_password, new_password }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('_auth_token')
     return fetch(
       `/api/users/set_password/`,
       {
@@ -111,7 +111,7 @@ class Api {
     author,
     tags
   } = {}) {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('auth_token')
       const authorization = token ? { 'Аuthorization': `Token ${token}` } : {}
       const tagsString = tags ? tags.filter(tag => tag.value).map(tag => `&tags=${tag.slug}`).join('') : ''
       return fetch(
@@ -129,7 +129,7 @@ class Api {
   getRecipe ({
     recipe_id
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     const authorization = token ? { 'Authorization': `Token ${token}` } : {}
     return fetch(
       `/api/recipes/${recipe_id}/`,
@@ -151,7 +151,7 @@ class Api {
     text = '',
     ingredients = []
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       '/api/recipes/',
       {
@@ -181,7 +181,7 @@ class Api {
     text,
     ingredients
   }, wasImageUpdated) { // image was changed
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${recipe_id}/`,
       {
@@ -204,7 +204,7 @@ class Api {
   }
 
   addToFavorites ({ id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${id}/favorite/`,
       {
@@ -218,7 +218,7 @@ class Api {
   }
 
   removeFromFavorites ({ id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${id}/favorite/`,
       {
@@ -232,7 +232,7 @@ class Api {
   }
 
   getUser ({ id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/${id}/`,
       {
@@ -249,7 +249,7 @@ class Api {
     page = 1,
     limit = 6
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/?page=${page}&limit=${limit}`,
       {
@@ -269,7 +269,7 @@ class Api {
     limit = 6,
     recipes_limit = 3
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/subscriptions/?page=${page}&limit=${limit}&recipes_limit=${recipes_limit}`,
       {
@@ -285,7 +285,7 @@ class Api {
   deleteSubscriptions ({
     author_id
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/${author_id}/subscribe/`,
       {
@@ -301,7 +301,7 @@ class Api {
   subscribe ({
     author_id
   }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/users/${author_id}/subscribe/`,
       {
@@ -316,7 +316,7 @@ class Api {
 
   // ingredients
   getIngredients ({ name }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/ingredients/?name=${name}`,
       {
@@ -330,7 +330,7 @@ class Api {
 
   // tags
   getTags () {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/tags/`,
       {
@@ -344,7 +344,7 @@ class Api {
 
 
   addToOrders ({ id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${id}/shopping_cart/`,
       {
@@ -358,7 +358,7 @@ class Api {
   }
 
   removeFromOrders ({ id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${id}/shopping_cart/`,
       {
@@ -372,7 +372,7 @@ class Api {
   }
 
   deleteRecipe ({ recipe_id }) {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/${recipe_id}/`,
       {
@@ -386,7 +386,7 @@ class Api {
   }
 
   downloadFile () {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('auth_token')
     return fetch(
       `/api/recipes/download_shopping_cart/`,
       {
