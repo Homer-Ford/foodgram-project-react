@@ -39,8 +39,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeWriteSerializer
         return RecipeReadSerializer
 
-    queryset = Recipe.objects.all().order_by('pub_date')
-    permission_classes = (AdminAuthorPermission,)
+    queryset = Recipe.objects.all()
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = RecipeResultSetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter

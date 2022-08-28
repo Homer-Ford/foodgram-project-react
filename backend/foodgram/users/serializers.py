@@ -46,6 +46,31 @@ class UserSignInSerializer(UserCreateSerializer):
         return value
 
 
+class SubUserSerializer(UserSerializer):
+    """Сериализатор для получения информации о подписанных пользователях."""
+
+    is_subscribed = serializers.SerializerMethodField()
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ('email', 'id', 'username', 'first_name', 'last_name',
+                  'is_subscribed', 'recipes', 'recipes_count')
+
+    def get_is_subscribed(self, obj):
+        return True
+
+    def get_recipes(self, obj):
+        queryset = Recipe.objects.filter(author=obj.id)
+        serializer = api.RecipeMiniSerializer(queryset, many=True)
+        return serializer.data
+
+    def get_recipes_count(self, obj):
+        queryset = Recipe.objects.filter(author=obj.id).count()
+        return queryset
+
+
 class FollowSerializer(serializers.ModelSerializer):
     """Сериализатор для модели подписок."""
 
@@ -76,28 +101,3 @@ class FollowSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         serializer = SubUserSerializer(instance.following)
         return serializer.data
-
-
-class SubUserSerializer(UserSerializer):
-    """Сериализатор для получения информации о подписанных пользователях."""
-
-    is_subscribed = serializers.SerializerMethodField()
-    recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'is_subscribed', 'recipes', 'recipes_count')
-
-    def get_is_subscribed(self, obj):
-        return True
-
-    def get_recipes(self, obj):
-        queryset = Recipe.objects.filter(author=obj.id)
-        serializer = api.RecipeMiniSerializer(queryset, many=True)
-        return serializer.data
-
-    def get_recipes_count(self, obj):
-        queryset = Recipe.objects.filter(author=obj.id).count()
-        return queryset
