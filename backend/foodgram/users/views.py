@@ -34,11 +34,11 @@ class CustomUserViewSet(UserViewSet):
         return Response(serializer.data)
 
     def get_queryset(self):
-        if self.kwargs.get("users_id") is None:
+        if self.kwargs.get("user_id") is None:
             pagination_class = LimitOffsetPagination
             return User.objects.all()
         pagination_class = None
-        return User.objects.get(pk=self.kwargs.get("users_id"))
+        return User.objects.get(pk=self.kwargs.get("user_id"))
 
     permission_classes = (AllowAny,)
 
