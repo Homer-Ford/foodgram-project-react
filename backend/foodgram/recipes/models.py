@@ -40,7 +40,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         'Картинка',
         help_text='Загрузите картинку рецепта',
-        upload_to='recipes/',
+        upload_to='images/',
         blank=True,
         null=True,
     )
