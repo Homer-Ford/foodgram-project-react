@@ -6,11 +6,7 @@ from .views import FollowViewSet, CustomUserViewSet
 
 router = DefaultRouter()
 
-router.register(
-    r'users/(?P<users_id>\d+)',
-    FollowViewSet,
-    basename='subscribe'
-)
+
 router.register(
     'users/subscriptions',
     FollowViewSet,
@@ -21,7 +17,11 @@ router.register(
     CustomUserViewSet,
     basename='users'
 )
-
+router.register(
+    r'users/(?P<users_id>\d+)',
+    FollowViewSet,
+    basename='subscribe'
+)
 urlpatterns = [
     path('', include(router.urls)),
     path('', include('djoser.urls')),

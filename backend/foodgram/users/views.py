@@ -37,6 +37,7 @@ class CustomUserViewSet(UserViewSet):
     permission_classes = (AllowAny,)
     pagination_class = LimitOffsetPagination
 
+
 class FollowViewSet(viewsets.ModelViewSet):
     """Вьюсет для списка подписок."""
 

@@ -14,6 +14,11 @@ router.register(
     basename='tags'
 )
 router.register(
+    'recipes',
+    RecipeViewSet,
+    basename='recipes'
+)
+router.register(
     r'recipes/(?P<recipes_id>\d+)',
     RecipeViewSet,
     basename='favorite'
@@ -22,11 +27,6 @@ router.register(
     r'recipes/(?P<recipes_id>\d+)',
     RecipeViewSet,
     basename='shopping_cart'
-)
-router.register(
-    'recipes',
-    RecipeViewSet,
-    basename='recipes'
 )
 router.register(
     'ingredients',

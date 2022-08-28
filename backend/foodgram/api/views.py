@@ -44,14 +44,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
-    @action(methods=['patch', 'delete', 'get'], detail=False,
-            permission_classes=(AdminAuthorPermission,), )
-    def get(self):
-        recipe_id = self.kwargs.get('recipes_id')
-        recipes = get_object_or_404(Recipe, pk=recipe_id)
-        serializer = RecipeReadSerializer(recipes)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['patch', 'delete'], detail=False,
+            permission_classes=(AdminAuthorPermission,),)
     def delete(self, request, **kwargs):
         recipe_id = self.kwargs.get('recipes_id')
         recipes = get_object_or_404(Recipe, pk=recipe_id)
