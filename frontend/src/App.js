@@ -75,7 +75,7 @@ function App() {
       email, password
     }).then(res => {
       if (res.auth_token) {
-        localStorage.setItem('auth_token', res.auth_token)
+        localStorage.setItem('token', res.auth_token)
         api.getUserData()
           .then(res => {
             setUser(res)
@@ -110,7 +110,7 @@ function App() {
     api
       .signout()
       .then(res => {
-        localStorage.removeItem('auth_token')
+        localStorage.removeItem('token')
         setLoggedIn(false)
       })
       .catch(err => {
@@ -149,7 +149,7 @@ function App() {
   }
 
   useEffect(_ => {
-    const token = localStorage.getItem('auth_token')
+    const token = localStorage.getItem('token')
     if (token) {
       return api.getUserData()
         .then(res => {
