@@ -38,12 +38,6 @@ jobs:
           context: ./backend/foodgram
           push: true
           tags: homerford/foodgram:latest
-      - name: Push to Docker Hub frontend
-        uses: docker/build-push-action@v2
-        with:
-          context: ./frontend
-          push: true
-          tags: homerford/frontend:latest
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push_to_docker_hub
