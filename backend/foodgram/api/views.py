@@ -44,7 +44,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
-
     @action(methods=['patch', 'delete'], detail=False,
             permission_classes=(AdminAuthorPermission,),)
     def delete(self, request, **kwargs):

@@ -43,6 +43,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     serializer_class = FollowSerializer
     queryset = Follow.objects.all()
+    pagination_class = LimitOffsetPagination
 
     def perform_create(self, serializer):
         author_id = self.kwargs.get('users_id')
