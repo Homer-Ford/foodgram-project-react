@@ -35,7 +35,7 @@ class CustomUserViewSet(UserViewSet):
 
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
-    pagination_class = None
+    pagination_class = LimitOffsetPagination
 
 class FollowViewSet(viewsets.ModelViewSet):
     """Вьюсет для списка подписок."""

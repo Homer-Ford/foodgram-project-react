@@ -28,7 +28,6 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     permission_classes = (IsAdminUserOrReadOnly,)
     lookup_field = 'slug'
-    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -41,12 +40,18 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    pagination_class = None
+    pagination_class = RecipeResultSetPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
-    @action(methods=['patch', 'delete'], detail=False,
+    @action(methods=['patch', 'delete', 'get'], detail=False,
             permission_classes=(AdminAuthorPermission,), )
+    def get(self):
+        recipe_id = self.kwargs.get('recipes_id')
+        recipes = get_object_or_404(Recipe, pk=recipe_id)
+        serializer = RecipeReadSerializer(recipes)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def delete(self, request, **kwargs):
         recipe_id = self.kwargs.get('recipes_id')
         recipes = get_object_or_404(Recipe, pk=recipe_id)
@@ -138,4 +143,3 @@ class IngredientViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUserOrReadOnly,)
     filter_backends = (CustomSearchFilter,)
     search_fields = ('^name',)
-    pagination_class = None
