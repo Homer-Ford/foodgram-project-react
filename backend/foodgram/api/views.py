@@ -39,15 +39,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeWriteSerializer
         return RecipeReadSerializer
 
-    def get_queryset(self):
-        if self.kwargs.get('recipes_id') is None:
-            pagination_class = RecipeResultSetPagination
-            return Recipe.objects.all()
-        pagination_class = None
-        filterset_class = None
-        return Recipe.objects.get(pk=self.kwargs.get('recipes_id'))
-
+    queryset = Recipe.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    pagination_class = None
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 

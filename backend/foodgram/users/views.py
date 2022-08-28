@@ -33,15 +33,9 @@ class CustomUserViewSet(UserViewSet):
         serializer = self.get_serializer(user_me)
         return Response(serializer.data)
 
-    def get_queryset(self):
-        if self.kwargs.get("user_id") is None:
-            pagination_class = LimitOffsetPagination
-            return User.objects.all()
-        pagination_class = None
-        return User.objects.get(pk=self.kwargs.get("user_id"))
-
+    queryset = User.objects.all()
     permission_classes = (AllowAny,)
-
+    pagination_class = None
 
 class FollowViewSet(viewsets.ModelViewSet):
     """Вьюсет для списка подписок."""
