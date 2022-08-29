@@ -1,5 +1,8 @@
 # foodgram
-
+http://158.160.0.12/
+login: anton-anuchin@mail.ru
+password: 03041987Dog
+![example workflow](https://github.com/Homer-Ford/foodgram-project-react/actions/workflows/foodgram-workflow.yml/badge.svg)
 
 ### Описание проекта:
 

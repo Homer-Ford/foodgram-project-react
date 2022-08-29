@@ -1,14 +1,13 @@
+from django.contrib.auth import get_user_model
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.relations import SlugRelatedField
-from djoser.serializers import UserSerializer, UserCreateSerializer
 
 import api.serializers as api
-from .models import User
-from recipes.models import (
-    Recipe, Ingredient, Tag, RecipeIngredient,
-    Favorite, Follow, ShoppingCart,
-)
+from recipes.models import Follow, Recipe
+
+User = get_user_model()
 
 
 class CustomUserSerializer(UserSerializer):
@@ -26,8 +25,7 @@ class CustomUserSerializer(UserSerializer):
         if request is None or request.user.is_anonymous:
             return False
         user = request.user
-        queryset = Follow.objects.filter(following=obj, user=user).exists()
-        return queryset
+        return Follow.objects.filter(following=obj, user=user).exists()
 
 
 class UserSignInSerializer(UserCreateSerializer):
@@ -67,8 +65,7 @@ class SubUserSerializer(UserSerializer):
         return serializer.data
 
     def get_recipes_count(self, obj):
-        queryset = Recipe.objects.filter(author=obj.id).count()
-        return queryset
+        return Recipe.objects.filter(author=obj.id).count()
 
 
 class FollowSerializer(serializers.ModelSerializer):

@@ -1,12 +1,12 @@
+from django.contrib.auth import get_user_model
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from recipes.models import (
-    Recipe, Ingredient, Tag, RecipeIngredient, ShoppingCart,
-    Favorite,
-)
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 from users.serializers import CustomUserSerializer
-from users.models import User
+
+User = get_user_model()
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -51,7 +51,8 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор для записи количества ингридиента."""
 
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
+                                            many=True)
 
     class Meta:
         fields = ('id', 'amount')
@@ -102,16 +103,14 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         if request is None or request.user.is_anonymous:
             return False
         user = request.user
-        queryset = Favorite.objects.filter(recipes=obj, user=user).exists()
-        return queryset
+        return Favorite.objects.filter(recipes=obj, user=user).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
         user = request.user
-        queryset = ShoppingCart.objects.filter(recipes=obj, user=user).exists()
-        return queryset
+        return ShoppingCart.objects.filter(recipes=obj, user=user).exists()
 
 
 class RecipeWriteSerializer(serializers.ModelSerializer):
