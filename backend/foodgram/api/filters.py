@@ -5,7 +5,7 @@ from rest_framework.filters import SearchFilter
 
 CHOICES = (
     ('breakfast', 'breakfast'),
-    ('launch', 'launch'),
+    ('lunch', 'lunch'),
     ('dinner', 'dinner')
 )
 

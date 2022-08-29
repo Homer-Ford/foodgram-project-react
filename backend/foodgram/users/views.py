@@ -41,25 +41,14 @@ class CustomUserViewSet(UserViewSet):
 class FollowViewSet(viewsets.ModelViewSet):
     """Вьюсет для списка подписок."""
 
+    def get_queryset(self):
+        user = self.request.user
+        following = user.follower.all()
+        return following
+
     serializer_class = FollowSerializer
-    queryset = Follow.objects.all()
     pagination_class = LimitOffsetPagination
-
-    def perform_create(self, serializer):
-        author_id = self.kwargs.get('users_id')
-        author = get_object_or_404(User, pk=author_id)
-        user = self.request.user
-        serializer.is_valid(raise_exception=True)
-        serializer.save(following=author, user=user)
-
-    @action(methods=['delete'], detail=False)
-    def delete(self, request, **kwargs):
-        author_id = self.kwargs.get('users_id')
-        author = get_object_or_404(User, pk=author_id)
-        user = self.request.user
-        follow = get_object_or_404(Follow, following=author, user=user)
-        follow.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    permission_classes = (IsAuthenticated,)
 
     @action(detail=False, permission_classes=(IsAuthenticated,),
             url_path='subscribe', methods=['delete', 'post'])
