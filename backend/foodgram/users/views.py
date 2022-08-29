@@ -43,8 +43,7 @@ class FollowViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        following = user.follower.all()
-        return following
+        return user.follower.all()
 
     serializer_class = FollowSerializer
     pagination_class = LimitOffsetPagination
