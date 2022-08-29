@@ -50,8 +50,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Сериализатор для записи количества ингридиента."""
 
-    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),
-                                            many=True)
+    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all(),)
 
     class Meta:
         fields = ('id', 'amount')
@@ -144,7 +143,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
         return recipes
 
     def update(self, instance, validated_data):
-        RecipeIngredient.objects.get(recipes=instance).delete()
+        RecipeIngredient.objects.filter(recipes=instance).delete()
         instance.tags.set(validated_data.get('tags'))
         instance.image = validated_data.get('image')
         instance.name = validated_data.get('name')
