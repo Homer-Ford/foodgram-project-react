@@ -1,13 +1,22 @@
+import django_filters
 from django_filters.rest_framework import FilterSet, filters
 from recipes.models import Recipe
 from rest_framework.filters import SearchFilter
 
 
+CHOICES = (
+    ('breakfast', 'breakfast'),
+    ('launch', 'launch'),
+    ('dinner', 'dinner')
+)
+
+
 class RecipeFilter(FilterSet):
     """Фильтрация рецептов."""
 
-    tags = filters.CharFilter(
+    tags = django_filters.MultipleChoiceFilter(
         field_name='tags__slug',
+        choices=CHOICES,
         lookup_expr='icontains'
     )
     is_favorited = filters.BooleanFilter(

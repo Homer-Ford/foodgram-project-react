@@ -145,7 +145,7 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         RecipeIngredient.objects.filter(recipes=instance).delete()
         instance.tags.set(validated_data.get('tags'))
-        instance.image = validated_data.get('image')
+        instance.image = validated_data.get('image', instance.image)
         instance.name = validated_data.get('name')
         instance.text = validated_data.get('text')
         instance.cooking_time = validated_data.get('cooking_time')
