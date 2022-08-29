@@ -166,9 +166,9 @@ class Favorite(models.Model):
             fields=['recipes', 'user'],
             name='favorite_unique')
         ]
-        
+
     def __str__(self):
-        return f'Рецепт "{self.recipes}" в избранных у пользователя: {self.user}'
+        return f'"{self.recipes}" в избранных у пользователя: {self.user}'
 
 
 class ShoppingCart(models.Model):
@@ -200,7 +200,7 @@ class ShoppingCart(models.Model):
             fields=['recipes', 'user'],
             name='shopping_unique')
         ]
-        
+
     def __str__(self):
         return f'Рецепт "{self.recipes}" в корзине у пользователя: {self.user}'
 
@@ -228,6 +228,6 @@ class Follow(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'following'],
                                     name='follow_unique')]
-    
+
     def __str__(self):
         return f'{self.user} подписан на {self.following}'
